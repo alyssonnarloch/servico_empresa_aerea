@@ -14,6 +14,7 @@ import model.Schedule;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 @Path("schedule")
 public class ScheduleResource {
@@ -44,20 +45,35 @@ public class ScheduleResource {
     @Path("/start/{start_destination_id}/end/{end_destination_id}")
     @Produces("application/json; charset=UTF-8")
     public Response findByClient(@PathParam("start_destination_id") int startDestinationId,
-                                 @PathParam("end_destination_id") int endDestinationId) {
+            @PathParam("end_destination_id") int endDestinationId) {
+
         SessionFactory sf = Util.getSessionFactory();
         Session s = sf.openSession();
+        Transaction t = s.getTransaction();              
         
-        Query query = s.createQuery("FROM Schedule WHERE start_destination_id = :startDestinationId AND end_destination_id = :endDestinationId");
-        query.setInteger("startDestinationId", startDestinationId);
-        query.setInteger("endDestinationId", endDestinationId);
-        
-        GenericEntity<List<Schedule>> entity = new GenericEntity<List<Schedule>>(query.list()) {
-        };
-        
-        s.flush();
-        s.close();
+        try {
+            t.begin();
 
-        return Response.ok(entity).build();
+            Query query = s.createQuery("FROM Schedule WHERE start_destination_id = :startDestinationId AND end_destination_id = :endDestinationId");
+            query.setInteger("startDestinationId", startDestinationId);
+            query.setInteger("endDestinationId", endDestinationId);
+
+            GenericEntity<List<Schedule>> entity = new GenericEntity<List<Schedule>>(query.list()) {
+            };
+
+            t.commit();
+
+            s.flush();
+            s.close();
+
+            return Response.ok(entity).build();
+        } catch (Exception ex) {
+            t.rollback();
+            
+            s.flush();
+            s.close();
+            
+            return Response.serverError().build();
+        }
     }
 }
