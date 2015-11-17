@@ -61,9 +61,9 @@ public class CityResource {
     }
     
     @GET
-    @Path("/city_name/{city_name}")
+    @Path("/search/{search}")
     @Produces("application/json; charset=UTF-8")
-    public Response findByName(@PathParam("city_name") String cityName) {
+    public Response findByName(@PathParam("search") String search) {
 
         SessionFactory sf = Util.getSessionFactory();
         Session s = sf.openSession();
@@ -72,8 +72,8 @@ public class CityResource {
         try {
             t.begin();
 
-            Query query = s.createQuery("FROM City WHERE city_name LIKE '%:cityName%'");
-            query.setString("cityName", cityName);
+            Query query = s.createQuery("FROM City WHERE city_name LIKE :search OR airport_name LIKE :search");
+            query.setString("search", "%" + search + "%");
 
             GenericEntity<List<City>> entity = new GenericEntity<List<City>>(query.list()) {
             };
@@ -86,6 +86,8 @@ public class CityResource {
             return Response.ok(entity).build();
         } catch (Exception ex) {
             t.rollback();
+            
+            ex.printStackTrace();
             
             s.flush();
             s.close();
