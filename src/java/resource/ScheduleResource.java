@@ -42,13 +42,13 @@ public class ScheduleResource {
     }
 
     @GET
-    @Path("/start/{start_destination_id}/end/{end_destination_id}/date/{start_date}")
+    @Path("/start/{start_destination_id}/end/{end_destination_id}/{date: .*}")
     @Produces("application/json; charset=UTF-8")
     public Response findByClient(
             @PathParam("start_destination_id") int startDestinationId,
             @PathParam("end_destination_id") int endDestinationId,
-            @PathParam("start_date") String startDate) {
-
+            @PathParam("date") String startDate) {
+        
         SessionFactory sf = Util.getSessionFactory();
         Session s = sf.openSession();
         Transaction t = s.getTransaction();
@@ -56,11 +56,20 @@ public class ScheduleResource {
         try {
             t.begin();
 
-            Query query = s.createQuery("FROM Schedule WHERE start_destination_id = :startDestinationId AND end_destination_id = :endDestinationId AND DATE(start_at) = :startDate");
+            String sql = "FROM Schedule WHERE start_destination_id = :startDestinationId AND end_destination_id = :endDestinationId";
+            
+            if(startDate != null && !startDate.equals("")) {
+                sql += " AND DATE(start_at) = :startDate";
+            }
+            System.out.println(sql);
+            Query query = s.createQuery(sql);
             query.setInteger("startDestinationId", startDestinationId);
             query.setInteger("endDestinationId", endDestinationId);
-            query.setString("startDate", startDate);
-            System.out.println("Start Date: " + startDate);
+            
+            if(startDate != null && !startDate.equals("")) {
+                query.setString("startDate", startDate);
+            }
+            
             GenericEntity<List<Schedule>> entity = new GenericEntity<List<Schedule>>(query.list()) {
             };
 
