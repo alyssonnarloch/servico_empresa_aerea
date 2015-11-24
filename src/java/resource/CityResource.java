@@ -95,4 +95,39 @@ public class CityResource {
             return Response.serverError().build();
         }
     }
+    
+    @GET
+    @Path("alldestinations")
+    @Produces("application/json; charset=UTF-8")
+    public Response findAllDestination() {
+        SessionFactory sf = Util.getSessionFactory();
+        Session s = sf.openSession();
+        Transaction t = s.getTransaction();              
+        
+        try {
+            t.begin();
+
+            Query query = s.createQuery("SELECT DISTINCT c FROM Schedule s LEFT JOIN s.endDestination c ORDER BY c.cityName");
+
+            GenericEntity<List<City>> entity = new GenericEntity<List<City>>(query.list()) {
+            };
+
+            t.commit();
+
+            s.flush();
+            s.close();
+
+            return Response.ok(entity).build();
+        } catch (Exception ex) {
+            t.rollback();
+            
+            ex.printStackTrace();
+            System.out.println(ex.getMessage());
+            
+            s.flush();
+            s.close();
+            
+            return Response.serverError().build();
+        }
+    }
 }
