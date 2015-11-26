@@ -10,6 +10,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
+import model.Link;
 import model.Schedule;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -61,7 +62,7 @@ public class ScheduleResource {
             if(startDate != null && !startDate.equals("")) {
                 sql += " AND DATE(start_at) = :startDate";
             }
-            System.out.println(sql);
+            
             Query query = s.createQuery(sql);
             query.setInteger("startDestinationId", startDestinationId);
             query.setInteger("endDestinationId", endDestinationId);
@@ -70,7 +71,14 @@ public class ScheduleResource {
                 query.setString("startDate", startDate);
             }
             
-            GenericEntity<List<Schedule>> entity = new GenericEntity<List<Schedule>>(query.list()) {
+            List<Schedule> schedules = query.list();
+            
+            for(int i = 0; i < schedules.size(); i++) {
+                schedules.get(i).addLink(new Link("href", "hrefteste"));
+                schedules.get(i).addLink(new Link("rel", "relteste"));
+            }
+            
+            GenericEntity<List<Schedule>> entity = new GenericEntity<List<Schedule>>(schedules) {
             };
 
             t.commit();

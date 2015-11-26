@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "schedules")
-public class Schedule implements Serializable {
+public class Schedule extends Hateoas implements Serializable {
 
     @Id
     @GeneratedValue

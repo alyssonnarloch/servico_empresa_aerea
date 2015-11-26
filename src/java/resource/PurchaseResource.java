@@ -43,4 +43,5 @@ public class PurchaseResource {
         return Response.ok(entity).build();
     }
 
+    
 }

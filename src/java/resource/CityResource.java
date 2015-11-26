@@ -106,11 +106,8 @@ public class CityResource {
         
         try {
             t.begin();
-
             Query query = s.createQuery("SELECT DISTINCT c FROM Schedule s LEFT JOIN s.endDestination c ORDER BY c.cityName");
-
-            GenericEntity<List<City>> entity = new GenericEntity<List<City>>(query.list()) {
-            };
+            GenericEntity<List<City>> entity = new GenericEntity<List<City>>(query.list()) {};
 
             t.commit();
 
