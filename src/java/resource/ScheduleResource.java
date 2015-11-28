@@ -10,7 +10,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
-import model.Link;
+import model.Hateoas;
 import model.Schedule;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -74,8 +74,10 @@ public class ScheduleResource {
             List<Schedule> schedules = query.list();
             
             for(int i = 0; i < schedules.size(); i++) {
-                schedules.get(i).addLink(new Link("href", "hrefteste"));
-                schedules.get(i).addLink(new Link("rel", "relteste"));
+                //schedules.get(i).addLink(new Link("href", "hrefteste"));
+                //schedules.get(i).addLink(new Link("rel", "relteste"));
+                schedules.get(i).setRel(Hateoas.SELF);
+                schedules.get(i).setHref("testinho");
             }
             
             GenericEntity<List<Schedule>> entity = new GenericEntity<List<Schedule>>(schedules) {

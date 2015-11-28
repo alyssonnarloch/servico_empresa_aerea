@@ -1,25 +1,60 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Hateoas {
 
-    protected List<Link> links;
+    public final static String ITEM = "item";
+    public final static String COLLECTION = "collection";
+    public final static String EDIT = "edit";
+    public final static String LATEST_VERSION = "latest-version";
+    public final static String SELF = "self";
+
+    private String rel;
+    private String href;
+    private String title;
+    private String method;
+    private String type;
 
     public Hateoas() {
-        this.links = new ArrayList<Link>();
     }
 
-    public List<Link> getLinks() {
-        return links;
+    public String getRel() {
+        return rel;
     }
 
-    public void setLinks(List<Link> links) {
-        this.links = links;
+    public void setRel(String rel) {
+        this.rel = rel;
     }
-    
-    public void addLink(Link link) {
-        this.links.add(link);
+
+    public String getHref() {
+        return href;
     }
+
+    public void setHref(String href) {
+        this.href = href;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
 }

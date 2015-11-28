@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "cities")
-public class City implements Serializable {
+public class City extends Hateoas implements Serializable {
 
     @Id
     @GeneratedValue

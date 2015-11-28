@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "purchases")
-public class Purchase implements Serializable {
+public class Purchase extends Hateoas implements Serializable {
 
     @Id
     @GeneratedValue

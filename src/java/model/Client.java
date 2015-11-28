@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "clients")
-public class Client implements Serializable {
+public class Client extends Hateoas implements Serializable {
 
     @Id
     @GeneratedValue
