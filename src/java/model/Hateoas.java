@@ -1,60 +1,24 @@
 package model;
 
+import com.google.gson.Gson;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Hateoas {
 
-    public final static String ITEM = "item";
-    public final static String COLLECTION = "collection";
-    public final static String EDIT = "edit";
-    public final static String LATEST_VERSION = "latest-version";
-    public final static String SELF = "self";
-
-    private String rel;
-    private String href;
-    private String title;
-    private String method;
-    private String type;
-
+    private Map<String, String> links;
+    private Gson gson;
+    
     public Hateoas() {
+        links = new HashMap<String, String>();
+        gson = new Gson();
     }
 
-    public String getRel() {
-        return rel;
+    public void put(String key, String value) {
+        links.put(key, value);
     }
-
-    public void setRel(String rel) {
-        this.rel = rel;
+    
+    public String toJson() {
+        return gson.toJson(links).toString().replace("\"", "");
     }
-
-    public String getHref() {
-        return href;
-    }
-
-    public void setHref(String href) {
-        this.href = href;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
 }

@@ -2,6 +2,8 @@ package model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,10 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "schedules")
-public class Schedule extends Hateoas implements Serializable {
+public class Schedule implements Serializable {
 
     @Id
     @GeneratedValue
@@ -41,7 +44,11 @@ public class Schedule extends Hateoas implements Serializable {
     @JoinColumn(name = "end_destination_id")
     private City endDestination;
 
+    @Transient
+    private List<Link> links;
+
     public Schedule() {
+
     }
 
     public int getId() {
@@ -106,6 +113,14 @@ public class Schedule extends Hateoas implements Serializable {
 
     public void setEndDestination(City endDestination) {
         this.endDestination = endDestination;
+    }
+
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<Link> links) {
+        this.links = links;
     }
 
 }

@@ -1,6 +1,9 @@
 package resource;
 
+import com.google.gson.Gson;
 import hibernate.Util;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -10,7 +13,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import model.Hateoas;
+import model.Link;
 import model.Schedule;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -45,7 +50,7 @@ public class ScheduleResource {
     @GET
     @Path("/start/{start_destination_id}/end/{end_destination_id}/{date: .*}")
     @Produces("application/json; charset=UTF-8")
-    public Response findByClient(
+    public Response findByDestinationDate(
             @PathParam("start_destination_id") int startDestinationId,
             @PathParam("end_destination_id") int endDestinationId,
             @PathParam("date") String startDate) {
@@ -53,6 +58,9 @@ public class ScheduleResource {
         SessionFactory sf = Util.getSessionFactory();
         Session s = sf.openSession();
         Transaction t = s.getTransaction();
+        
+        Hateoas h = new Hateoas();
+        UriBuilder ub = context.getBaseUriBuilder().path(ScheduleResource.class);
 
         try {
             t.begin();
@@ -72,12 +80,16 @@ public class ScheduleResource {
             }
             
             List<Schedule> schedules = query.list();
-            
+            Gson gson = new Gson();
             for(int i = 0; i < schedules.size(); i++) {
-                //schedules.get(i).addLink(new Link("href", "hrefteste"));
-                //schedules.get(i).addLink(new Link("rel", "relteste"));
-                schedules.get(i).setRel(Hateoas.SELF);
-                schedules.get(i).setHref("testinho");
+                URI uriSelf = ub.path("").build();                                
+                
+                List<Link> links = new ArrayList<Link>();
+                
+                links.add(new Link("self", "http://oimundinholoco.com.br"));
+                links.add(new Link("title", "AJUDA AE"));
+                
+                schedules.get(i).setLinks(links);
             }
             
             GenericEntity<List<Schedule>> entity = new GenericEntity<List<Schedule>>(schedules) {
