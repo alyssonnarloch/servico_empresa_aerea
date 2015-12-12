@@ -2,6 +2,7 @@ package model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "purchases")
@@ -32,6 +34,12 @@ public class Purchase implements Serializable {
 
     @Column(name = "created_at")
     private Date createdAt;
+
+    @Transient
+    private List<Link> links;
+
+    public static int EFFECTED = 1;
+    public static int CANCELED = 2;
 
     public Purchase() {
     }
@@ -82,6 +90,14 @@ public class Purchase implements Serializable {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<Link> links) {
+        this.links = links;
     }
 
 }

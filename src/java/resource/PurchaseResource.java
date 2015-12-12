@@ -1,16 +1,23 @@
 package resource;
 
 import hibernate.Util;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import model.Client;
+import model.Hateoas;
+import model.Link;
 import model.Purchase;
 import model.Schedule;
 import org.hibernate.Query;
@@ -46,17 +53,17 @@ public class PurchaseResource {
         return Response.ok(entity).build();
     }
 
-    @GET
-    @Path("/save/schedule/{schedule_id}/client/{client_id}")
+    @POST
+    @Path("/save")
     @Produces("application/json; charset=UTF-8")
-    public Response save(@PathParam("schedule_id") int scheduleId, 
-                                @PathParam("client_id") int clientId){
-        
+    public Response save(@FormParam("schedule_id") int scheduleId,
+            @FormParam("client_id") int clientId) {
+
         SessionFactory sf = Util.getSessionFactory();
         Session s = sf.openSession();
         Transaction t = s.beginTransaction();
-        
-        try{
+
+        try {
             Client client = (Client) s.get(Client.class, clientId);
             Schedule schedule = (Schedule) s.get(Schedule.class, scheduleId);
 
@@ -64,12 +71,59 @@ public class PurchaseResource {
             purchase.setClient(client);
             purchase.setSchedule(schedule);
             purchase.setPrice(schedule.getPrice());
+            purchase.setStatus(Purchase.EFFECTED);
+            purchase.setCreatedAt(new Date());
 
             s.save(purchase);
 
+            t.commit();
+            
             s.flush();
             s.close();
-            
+
+            Hateoas hSelf = new Hateoas(context, PurchaseResource.class);
+            hSelf.addParam("", String.valueOf(purchase.getId()));
+
+            List<Link> links = new ArrayList();
+            links.add(new Link("self", hSelf.getUri()));
+
+            purchase.setLinks(links);
+
+            GenericEntity<Purchase> entity = new GenericEntity<Purchase>(purchase) {
+            };
+
+            return Response.ok(entity).build();
+        } catch (Exception ex) {
+            t.rollback();
+
+            ex.printStackTrace();
+
+            s.flush();
+            s.close();
+
+            return Response.serverError().build();
+        }
+    }
+
+    @PUT
+    @Path("/cancel")
+    @Produces("application/json; charset=UTF-8")
+    public Response cancel(@FormParam("id") int id) {
+
+        SessionFactory sf = Util.getSessionFactory();
+        Session s = sf.openSession();
+        Transaction t = s.beginTransaction();
+
+        try {
+            Purchase purchase = (Purchase) s.get(Purchase.class, id);
+
+            purchase.setStatus(Purchase.CANCELED);
+
+            s.update(purchase);
+
+            s.flush();
+            s.close();
+
             return Response.ok().build();
         } catch (Exception ex) {
             t.rollback();
@@ -80,6 +134,6 @@ public class PurchaseResource {
             s.close();
 
             return Response.serverError().build();
-        }        
+        }
     }
 }
