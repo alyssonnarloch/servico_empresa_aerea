@@ -35,7 +35,7 @@ public class PurchaseResource {
     }
 
     @GET
-    @Path("/client_id/{client_id}")
+    @Path("/client/{client_id}")
     @Produces("application/json; charset=UTF-8")
     public Response getByClient(@PathParam("client_id") int clientId) {
         SessionFactory sf = Util.getSessionFactory();
@@ -106,7 +106,7 @@ public class PurchaseResource {
     }
 
     @PUT
-    @Path("/cancel")
+    @Path("/cancel/{id}")
     @Produces("application/json; charset=UTF-8")
     public Response cancel(@FormParam("id") int id) {
 
@@ -124,7 +124,10 @@ public class PurchaseResource {
             s.flush();
             s.close();
 
-            return Response.ok().build();
+            GenericEntity<Purchase> entity = new GenericEntity<Purchase>(purchase) {
+            };
+            
+            return Response.ok(entity).build();
         } catch (Exception ex) {
             t.rollback();
 
