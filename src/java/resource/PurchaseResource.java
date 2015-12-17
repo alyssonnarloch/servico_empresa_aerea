@@ -47,7 +47,7 @@ public class PurchaseResource {
         SessionFactory sf = Util.getSessionFactory();
         Session s = sf.openSession();
 
-        Query query = s.createQuery("FROM Purchase WHERE client_id = :clientId");
+        Query query = s.createQuery("FROM Purchase WHERE client_id = :clientId ORDER BY created_at DESC");
         query.setInteger("clientId", clientId);
 
         GenericEntity<List<Purchase>> entity = new GenericEntity<List<Purchase>>(query.list()) {
@@ -116,7 +116,7 @@ public class PurchaseResource {
     }
 
     @PUT
-    @Path("/cancel/{id}")
+    @Path("/cancel")
     @Produces("application/json; charset=UTF-8")
     public Response cancel(@FormParam("id") int id) {
 
