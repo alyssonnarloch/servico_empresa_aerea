@@ -35,6 +35,10 @@ public class Purchase implements Serializable {
     @Column(name = "created_at")
     private Date createdAt;
 
+    private int account;
+    
+    private int agency;
+    
     @Transient
     private List<Link> links;
 
@@ -92,6 +96,22 @@ public class Purchase implements Serializable {
         this.createdAt = createdAt;
     }
 
+    public int getAccount() {
+        return account;
+    }
+
+    public void setAccount(int account) {
+        this.account = account;
+    }
+
+    public int getAgency() {
+        return agency;
+    }
+
+    public void setAgency(int agency) {
+        this.agency = agency;
+    }   
+    
     public List<Link> getLinks() {
         return links;
     }

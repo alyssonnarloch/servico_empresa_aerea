@@ -35,6 +35,12 @@ public class PurchaseResource {
     }
 
     @GET
+    @Produces("application/json")
+    public String test() {
+        return "{oieeee : 1}";
+    }
+    
+    @GET
     @Path("/client/{client_id}")
     @Produces("application/json; charset=UTF-8")
     public Response getByClient(@PathParam("client_id") int clientId) {
@@ -57,7 +63,9 @@ public class PurchaseResource {
     @Path("/save")
     @Produces("application/json; charset=UTF-8")
     public Response save(@FormParam("schedule_id") int scheduleId,
-            @FormParam("client_id") int clientId) {
+            @FormParam("client_id") int clientId,
+            @FormParam("account") int account,
+            @FormParam("agency") int agency) {
 
         SessionFactory sf = Util.getSessionFactory();
         Session s = sf.openSession();
@@ -72,6 +80,8 @@ public class PurchaseResource {
             purchase.setSchedule(schedule);
             purchase.setPrice(schedule.getPrice());
             purchase.setStatus(Purchase.EFFECTED);
+            purchase.setAccount(account);
+            purchase.setAgency(agency);
             purchase.setCreatedAt(new Date());
 
             s.save(purchase);
