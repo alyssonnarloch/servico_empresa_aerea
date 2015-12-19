@@ -15,7 +15,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
-import model.Client;
+import model.User;
 import model.Hateoas;
 import model.Link;
 import model.Purchase;
@@ -72,7 +72,7 @@ public class PurchaseResource {
         Transaction t = s.beginTransaction();
 
         try {
-            Client client = (Client) s.get(Client.class, clientId);
+            User client = (User) s.get(User.class, clientId);
             Schedule schedule = (Schedule) s.get(Schedule.class, scheduleId);
 
             Purchase purchase = new Purchase();

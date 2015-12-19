@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "clients")
-public class Client implements Serializable {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue
@@ -16,9 +16,11 @@ public class Client implements Serializable {
 
     private String name;
 
+    private String email;
+
     private String password;
 
-    public Client() {
+    public User() {
     }
 
     public int getId() {
@@ -35,6 +37,14 @@ public class Client implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {

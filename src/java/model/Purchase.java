@@ -26,7 +26,7 @@ public class Purchase implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "client_id")
-    private Client client;
+    private User client;
 
     private double price;
 
@@ -64,11 +64,11 @@ public class Purchase implements Serializable {
         this.schedule = schedule;
     }
 
-    public Client getClient() {
+    public User getClient() {
         return client;
     }
 
-    public void setClient(Client client) {
+    public void setClient(User client) {
         this.client = client;
     }
 

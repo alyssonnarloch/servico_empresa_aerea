@@ -7,9 +7,9 @@
     <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/flight_company</property>
     <property name="hibernate.connection.username">root</property>
     <property name="hibernate.connection.password">root</property>
-    <mapping class="model.Schedule"/>
-    <mapping class="model.Purchase"/>
-    <mapping class="model.Client"/>
     <mapping class="model.City"/>
+    <mapping class="model.Purchase"/>
+    <mapping class="model.Schedule"/>
+    <mapping class="model.User"/>
   </session-factory>
 </hibernate-configuration>

@@ -14,6 +14,7 @@ public class ApplicationConfig extends Application {
     }
 
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(resource.AuthenticationResource.class);
         resources.add(resource.CityResource.class);
         resources.add(resource.PurchaseResource.class);
         resources.add(resource.ScheduleResource.class);
