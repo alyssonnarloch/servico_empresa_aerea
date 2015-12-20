@@ -33,7 +33,7 @@ public class AuthenticationResource {
         SessionFactory sf = Util.getSessionFactory();
         Session s = sf.openSession();
         
-        Query query = s.createQuery("FROM Client WHERE email = :email AND password = :password");
+        Query query = s.createQuery("FROM User WHERE email = :email AND password = :password");
         query.setString("email", email);
         query.setString("password", password);
         query.setMaxResults(1);
