@@ -1,7 +1,6 @@
 package resource;
 
 import hibernate.Util;
-import java.util.List;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -11,10 +10,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import model.User;
-import model.Purchase;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 @Path("authentication")
 public class AuthenticationResource {
@@ -32,6 +31,7 @@ public class AuthenticationResource {
         
         SessionFactory sf = Util.getSessionFactory();
         Session s = sf.openSession();
+        Transaction t = s.beginTransaction();
         
         Query query = s.createQuery("FROM User WHERE email = :email AND password = :password");
         query.setString("email", email);
@@ -42,16 +42,16 @@ public class AuthenticationResource {
         
         if(user == null) {
             user = new User();
-        } else {
-            user.setPassword("********************");
-        }
+        } 
         
+        s.flush();
+        s.close();
+        t.commit();
+        
+        user.setPassword("********************");
         GenericEntity<User> entity = new GenericEntity<User> (user) {
         };
 
-        s.flush();
-        s.close();
-        
         return Response.ok(entity).build();
     }
 
