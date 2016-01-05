@@ -10,6 +10,7 @@ import javax.ws.rs.ext.Provider;
 public class FilterAuthentication implements ContainerRequestFilter {
 
     public static final String AUTHENTICATION_HEADER = "Authorization";
+    public static final String AUTHENTICATION_TOKEN = "dHJ1dGFsb2NvQMOpbm9pem1hbm81Ng==";
 
     @Override
     public void filter(ContainerRequestContext containerRequest) throws WebApplicationException {
