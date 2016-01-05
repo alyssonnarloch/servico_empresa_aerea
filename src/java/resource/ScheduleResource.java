@@ -1,7 +1,6 @@
 package resource;
 
 import hibernate.Util;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.Context;
@@ -12,7 +11,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import model.Hateoas;
 import model.Link;
 import model.Schedule;

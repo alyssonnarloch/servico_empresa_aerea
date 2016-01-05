@@ -35,12 +35,6 @@ public class PurchaseResource {
     }
 
     @GET
-    @Produces("application/json")
-    public String test() {
-        return "{oieeee : 1}";
-    }
-    
-    @GET
     @Path("/client/{client_id}")
     @Produces("application/json; charset=UTF-8")
     public Response getByClient(@PathParam("client_id") int clientId) {
