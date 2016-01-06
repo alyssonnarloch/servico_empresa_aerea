@@ -34,6 +34,10 @@ public class ScheduleResource {
     public Response findAll() {
         SessionFactory sf = Util.getSessionFactory();
         Session s = sf.openSession();
+        Transaction t = s.getTransaction();
+        
+        t.begin();
+        
         List<Schedule> schedules = s.createCriteria(Schedule.class).list();
 
         for (int i = 0; i < schedules.size(); i++) {
@@ -54,6 +58,7 @@ public class ScheduleResource {
             schedules.get(i).setLinks(links);
         }
 
+        t.commit();
         s.flush();
         s.close();
 
