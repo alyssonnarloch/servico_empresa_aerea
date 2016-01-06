@@ -68,6 +68,8 @@ public class PurchaseResource {
         try {
             User client = (User) s.get(User.class, clientId);
             Schedule schedule = (Schedule) s.get(Schedule.class, scheduleId);
+            schedule.setAvailableSeats(schedule.getAvailableSeats() - 1);
+            s.update(schedule);
 
             Purchase purchase = new Purchase();
             purchase.setClient(client);
@@ -120,11 +122,14 @@ public class PurchaseResource {
 
         try {
             Purchase purchase = (Purchase) s.get(Purchase.class, id);
-
             purchase.setStatus(Purchase.CANCELED);
-
             s.update(purchase);
 
+            Schedule schedule = purchase.getSchedule();
+            schedule.setAvailableSeats(schedule.getAvailableSeats() + 1);
+            s.update(schedule);
+            
+            t.commit();
             s.flush();
             s.close();
 

@@ -69,6 +69,10 @@ public class ScheduleResource {
     public Response findById(@PathParam("id") int id) {
         SessionFactory sf = Util.getSessionFactory();
         Session s = sf.openSession();
+        Transaction t = s.getTransaction();
+        
+        t.begin();
+        
         Schedule schedule = (Schedule) s.get(Schedule.class, id);
 
         Hateoas hSelf = new Hateoas(context, ScheduleResource.class);
@@ -84,6 +88,7 @@ public class ScheduleResource {
 
         schedule.setLinks(links);
 
+        t.commit();
         s.flush();
         s.close();
 
