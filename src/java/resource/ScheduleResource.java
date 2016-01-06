@@ -35,6 +35,25 @@ public class ScheduleResource {
         SessionFactory sf = Util.getSessionFactory();
         Session s = sf.openSession();
         List<Schedule> schedules = s.createCriteria(Schedule.class).list();
+
+        for (int i = 0; i < schedules.size(); i++) {
+            Schedule schedule = schedules.get(i);
+
+            Hateoas hSelf = new Hateoas(context, ScheduleResource.class);
+            hSelf.addParam("", String.valueOf(schedule.getId()));
+
+            Hateoas hPurchase = new Hateoas(context, ScheduleResource.class);
+            hPurchase.addParam("save/schedule", String.valueOf(schedule.getId()));
+            hPurchase.addParam("client", String.valueOf(1));
+
+            List<Link> links = new ArrayList();
+
+            links.add(new Link("self", hSelf.getUri()));
+            links.add(new Link("purchase", hPurchase.getUri()));
+
+            schedules.get(i).setLinks(links);
+        }
+
         s.flush();
         s.close();
 
@@ -51,21 +70,20 @@ public class ScheduleResource {
         SessionFactory sf = Util.getSessionFactory();
         Session s = sf.openSession();
         Schedule schedule = (Schedule) s.get(Schedule.class, id);
-        
+
         Hateoas hSelf = new Hateoas(context, ScheduleResource.class);
         hSelf.addParam("", String.valueOf(schedule.getId()));
-  
-        Hateoas hPurchase = new Hateoas(context, ScheduleResource.class);
-        hPurchase.addParam("save/schedule", String.valueOf(schedule.getId()));
-        hPurchase.addParam("client", String.valueOf(1));        
+
+        Hateoas hPurchase = new Hateoas(context, PurchaseResource.class);
+        hPurchase.addParam("save", "");
 
         List<Link> links = new ArrayList();
 
         links.add(new Link("self", hSelf.getUri()));
         links.add(new Link("purchase", hPurchase.getUri()));
-        
+
         schedule.setLinks(links);
-        
+
         s.flush();
         s.close();
 
@@ -104,19 +122,18 @@ public class ScheduleResource {
             List<Schedule> schedules = query.list();
             for (int i = 0; i < schedules.size(); i++) {
                 Schedule schedule = schedules.get(i);
-                
+
                 Hateoas hSelf = new Hateoas(context, ScheduleResource.class);
                 hSelf.addParam("", String.valueOf(schedule.getId()));
 
                 Hateoas hPurchase = new Hateoas(context, ScheduleResource.class);
-                hPurchase.addParam("save/schedule", String.valueOf(schedule.getId()));
-                hPurchase.addParam("client", String.valueOf(1));        
+                hPurchase.addParam("save", "");
 
                 List<Link> links = new ArrayList();
 
                 links.add(new Link("self", hSelf.getUri()));
                 links.add(new Link("purchase", hPurchase.getUri()));
-        
+
                 schedules.get(i).setLinks(links);
             }
 

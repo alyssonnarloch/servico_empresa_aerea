@@ -37,7 +37,11 @@ public class Hateoas {
         while(i.hasNext()) {
             Map.Entry entry = (Map.Entry) i.next(); 
             if(!entry.getKey().toString().trim().isEmpty()) {
-                buildParams += "/" + entry.getKey() + "/";
+                buildParams += "/" + entry.getKey();
+                
+                if(!entry.getValue().toString().trim().isEmpty()) {
+                    buildParams += "/";
+                }
             }
             buildParams += entry.getValue();
         }                
